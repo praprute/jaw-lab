@@ -16,8 +16,7 @@ import {
   Media,
   Table,
 } from "reactstrap"
-import { Link } from "react-router-dom"
-
+import { withRouter, Link, Redirect } from "react-router-dom"
 //import Charts
 import StackedColumnChart from "./StackedColumnChart"
 // import DonutChart from './../../pages/AllCharts/apex/dountchart'
@@ -78,9 +77,6 @@ const Dashboard = props => {
 
 
   useEffect(() => {
-    // if(!user || !token){
-    //   history.push("/login")
-    // }
     
     // setTimeout(() => {
     //   setSubscribemodal(true)
@@ -398,4 +394,4 @@ Dashboard.propTypes = {
   t: PropTypes.any
 }
 
-export default withTranslation()(Dashboard)
+export default withRouter(withTranslation()(Dashboard))

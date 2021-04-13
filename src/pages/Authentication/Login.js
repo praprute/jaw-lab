@@ -33,7 +33,7 @@ import { useHistory } from 'react-router-dom'
 import {signInUser, authenticate, isAuthenticated} from './api'
 
 const Login = props => {
-  const history = useHistory();
+  let history = useHistory();
 
   const signIn = (res, type) => {
     const { socialLogin } = props
@@ -86,9 +86,10 @@ const Login = props => {
   const [textResponse, settextResponse] = useState("")
 
   const handleSubmit = event => {
-    // event.preventDefault();
+    event.preventDefault();
     console.log('check submit : ', history)
-    history.push("/dashboard")
+    history.push("/")
+    // return (<Redirect to="/Orders" /> )
     // signInUser(values).then(response => {
     //   console.log(response)
     //   if(response){

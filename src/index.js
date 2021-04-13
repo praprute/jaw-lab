@@ -6,11 +6,11 @@ import { BrowserRouter } from "react-router-dom"
 import "./i18n"
 import { Provider } from "react-redux"
 import store from "./store"
-
-
+import { createBrowserHistory } from 'history'
+const history = createBrowserHistory();
 const app = (
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter history={history}>
       <App />
     </BrowserRouter>
   </Provider>

@@ -16,10 +16,10 @@ import {
     TabContent,
     TabPane,
   } from "reactstrap"
-import { Link } from "react-router-dom"
+// import { Link } from "react-router-dom"
 import classnames from "classnames"
 import { connect } from "react-redux"
-
+import { withRouter, Link, Redirect } from "react-router-dom"
 //Component
 import LatestTranaction from "../Dashboard/LatestTranaction"
 import OrderTable from './Table'
@@ -74,9 +74,6 @@ const Orderpage = props => {
     }
   }
   useEffect(() => {
-    //    if(!user || !token){
-    // history.push("/login")
-    // }
 }, [])
     return (
         <React.Fragment>
@@ -184,4 +181,4 @@ const Orderpage = props => {
     Orderpage.propTypes = {
       t: PropTypes.any
     }
-export default withTranslation()(Orderpage)
+export default withRouter(withTranslation()(Orderpage))
