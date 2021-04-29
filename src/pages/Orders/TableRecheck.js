@@ -10,7 +10,7 @@ import "../Tables/datatables.scss"
 import ModalDetail from './ModalDetail'
 
 //get api
-import {getRecheckOrder,readOrderById,readTestResultlasted} from './api'
+import {getRecheckOrder,readOrderById,readTestResultlasted,reSend, getAllOrderLab} from './api'
 import { isAuthenticated } from './../Authentication/api'
 import { map } from "lodash";
 
@@ -19,6 +19,9 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import {AddProductDetail, AddSpecificDetail, AddTestResultlasted, AddSpecificBioDetail} from 'store/actions'
+
+//SweetAlert
+import SweetAlert from "react-bootstrap-sweetalert"
 
 const OrderTableRecheck = props => {
 
@@ -78,11 +81,19 @@ const [columnTable, setColumnTable] = useState([
         field: "detail",
         sort: "asc",
         // width: 100,
+      },{
+        label: "Resend",
+        field: "Resend",
+        sort: "asc",
+        // width: 100,
       },
   ],)
   const [dataMerchRecheck, setDataMerchRecheck] = useState({})
   const [detail, setdetail] = useState({})
   const [TRLasted ,setTRLasted] = useState({})
+  const [success_dlg, setsuccess_dlg] = useState(false)
+  const [dynamic_title, setdynamic_title] = useState("")
+  const [dynamic_description, setdynamic_description] = useState("")
 
   const fetchDetail = (token, idOrders) => {
       readOrderById(token, idOrders).then(data => {
@@ -99,7 +110,6 @@ const [columnTable, setColumnTable] = useState([
 
   const fetchTestResultlasted = (token, idOrders) => {
     readTestResultlasted(token, idOrders).then(data => {
-      console.log(' readTestResultlasted :',data)
       if(data){
         if(data.success == 'success'){
           if(!data.message){
@@ -121,8 +131,25 @@ const [columnTable, setColumnTable] = useState([
 
   const ModalDe = <ModalDetail />
 
+  const handleReSent = (token, idOrders) => {
+    console.log('idOrders : ' ,idOrders)
+    var id = {
+      idOrders : idOrders
+    }
+    reSend(token, id).then(data => {
+      console.log('resend : ',data)
+      if(data){
+        if(data.success == 'success'){
+          setsuccess_dlg(true)
+          setdynamic_title("Resend Success")
+          setdynamic_description("Your file has been Resend.")
+        }
+      }
+    })
+  }
+
   useEffect(() => {
-    getRecheckOrder(token).then(data => {
+    getAllOrderLab(token).then(data => {
       if(data == undefined){
         setDataMerchRecheck({
           columns: columnTable,
@@ -157,25 +184,40 @@ const [columnTable, setColumnTable] = useState([
                        props.toggle
                   }
                     ></i>
-                </span> 
-            }
-            index.push(rd)
-        }
-            const status = {
-                1: (
-                  <span className="badge bg-success font-size-10">Completed</span>
-                ),
-                0: <span className="badge bg-warning font-size-10">Waiting to check</span>,
-                2: <span className="badge bg-danger font-size-10">Rechecking</span>,
-              }
-            
-            const statePriority = {
-                0: <span className="badge bg-success font-size-10">normal</span>,
-                1: <span className="badge bg-warning font-size-10">rush</span>,
-                2: <span className="badge bg-danger font-size-10">urgent</span>,
+                </span> ,
+                Resend: <span
+                onClick={() => {
+                  handleReSent(token ,data.message[i].idOrders)}
                 }
-            
-        console.log(index)
+                ><button 
+                    type="button"
+                    color="primary"
+                    className="btn btn-primary waves-effect waves-light .w-xs"
+                  >
+                    <i className="bx bx-meteor font-size-16 align-middle me-2"></i>{" "}
+                    Resend
+                  </button>
+                </span>
+            }
+            if(data.message[i].Status == 2){
+              index.push(rd)
+            }
+        }
+        const status = {
+          1: (
+            <span className="badge bg-success font-size-10">Completed</span>
+          ),
+          0: <span className="badge bg-warning font-size-10">Waiting to check</span>,
+          3: <span className="badge bg-warning font-size-10">Waiting to Micro</span>,
+          2: <span className="badge bg-danger font-size-10">Rechecking</span>,
+        }
+      
+      const statePriority = {
+          0: <span className="badge bg-success font-size-10">normal</span>,
+          1: <span className="badge bg-warning font-size-10">rush</span>,
+          2: <span className="badge bg-danger font-size-10">urgent</span>,
+          }
+        
         setDataMerchRecheck({
             columns: columnTable,
               rows:map(index, order=>({...order, priority:statePriority[order.priority] ,status:status[order.status]})) 
@@ -191,10 +233,21 @@ const [columnTable, setColumnTable] = useState([
         
         }
     })
-  }, [])
+  }, [dataMerchRecheck])
 
   return (
     <React.Fragment>
+                  {success_dlg ? (
+                    <SweetAlert
+                      success
+                      title={dynamic_title}
+                      onConfirm={() => {
+                        setsuccess_dlg(false)
+                      }}
+                    >
+                      {dynamic_description}
+                    </SweetAlert>
+                  ) : null}
           <Row>
             <MDBDataTable responsive striped bordered  data={dataMerchRecheck} />
             {ModalDe}

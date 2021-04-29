@@ -74,6 +74,7 @@ import DashboardSaas from "../pages/Dashboard-saas/index"
 import DashboardCrypto from "../pages/Dashboard-crypto/index"
 import Blog from "../pages/Dashboard-Blog/index"
 import Orderpage from '../pages/Orders/index'
+import Labatorypage from '../pages/Lab/index'
 
 //Crypto
 import CryptoWallet from "../pages/Crypto/CryptoWallet/crypto-wallet"
@@ -170,7 +171,7 @@ const userRoutes = [
   { path: "/dashboard-crypto", component: DashboardCrypto },
   { path: "/blog", component: Blog },
   { path: "/Orders", component: Orderpage },
-
+  { path: "/Labatory", component: Labatorypage},
   //Crypto
   { path: "/crypto-wallet", component: CryptoWallet },
   { path: "/crypto-buy-sell", component: CryptoBuySell },

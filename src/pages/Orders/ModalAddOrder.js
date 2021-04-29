@@ -83,8 +83,12 @@ const ModalAddOrder = props => {
 
       const handleSubmit = event => {
         event.preventDefault()
-        var pord = Moment(values.pord).format('DD/MM/YYYY')
-        var bbe = Moment(values.bbe).format('DD/MM/YYYY')
+        console.log('bbe : ',values.pord )
+        console.log('pord : ',values.bbe )
+        // var pord = Moment(values.pord).format('DD/MM/YYYY')
+        // var bbe = Moment(values.bbe).format('DD/MM/YYYY')
+        var pord = values.pord
+        var bbe  = values.bbe 
         var priority = ""
         if(normal){
             priority = 0
@@ -126,6 +130,8 @@ const ModalAddOrder = props => {
                 setsuccess_error(true)
             }
         })
+
+
         // toggleAddorder()
         // setsuccess_msg(false)
         // setsuccess_error(false)

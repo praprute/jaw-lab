@@ -49,7 +49,6 @@ const Dashboard = props => {
   const [modal, setmodal] = useState(false)
   const [subscribemodal, setSubscribemodal] = useState(false)
   const {user, token} = isAuthenticated()
-
   const reports = [
     { title: "All Sample", iconClass: "bxs-cart-add", description: "1,235" },
     { title: "COA Export", iconClass: "bxs-archive-out", description: "35, 723" },
@@ -77,7 +76,9 @@ const Dashboard = props => {
 
 
   useEffect(() => {
-    
+    if(!token || !user){
+      history.push('/login')
+    }
     // setTimeout(() => {
     //   setSubscribemodal(true)
     // }, 2000);
@@ -104,11 +105,11 @@ const Dashboard = props => {
             <Col xl="12">
               <Row>
                 {/* Reports Render */}
-                <button onClick={() => {
+                {/* <button onClick={() => {
                   history.push('/Orders')
                 }}>
                   test page
-                </button>
+                </button> */}
                 {reports.map((report, key) => (
                   <Col md="4" key={"_col_" + key}>
                     <Card className="mini-stats-wid">

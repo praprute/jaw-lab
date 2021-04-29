@@ -83,80 +83,84 @@ const LatestTranaction = props => {
 
   useEffect(() => {
     getRealTimeOrder(props.token).then(response => {
-  
-      if(response.success == 'success'){
-        var index = []
-        for(let i = 0 ; i < response.message.length ; i++){
-          const rd = {
-            BBE:          response.message[i].BBE,
-            PORD:         response.message[i].PORD,
-            PO:           response.message[i].PO,
-            ProductName:  response.message[i].ProductName,
-            Status:       response.message[i].Status,
-            Priority:     response.message[i].Priority,
-            name:         response.message[i].name,
-            detail: <span>
-                     <i
-                     className={
-                       "bx bx-cog font-size-24"
-                     }
-                     style={{cursor:'pointer'}}
-                    ></i>
-                </span> 
-          }
-          index.push(rd)
-        }
-        const setStatus = {
-          completed: (
-            <span className="badge bg-success font-size-10">Completed</span>
-          ),
-          Waitingtocheck: <span className="badge bg-warning font-size-10">Waiting to check</span>,
-          Rechecking: <span className="badge bg-danger font-size-10">Rechecking</span>,
-        }
-      
-      const statePriority = {
-          normal: <span className="badge bg-success font-size-10">normal</span>,
-          fast: <span className="badge bg-warning font-size-10">fast</span>,
-          very: <span className="badge bg-danger font-size-10">very</span>,
-          }
-        settransactions(map(index, order=>({...order, Status:setStatus[order.Status], Priority:statePriority[order.Priority]})))
-       
+      if(response){
+        if(response.success == 'success'){
+                var index = []
+                for(let i = 0 ; i < response.message.length ; i++){
+                  const rd = {
+                    BBE:          response.message[i].BBE,
+                    PORD:         response.message[i].PORD,
+                    PO:           response.message[i].PO,
+                    ProductName:  response.message[i].ProductName,
+                    Status:       response.message[i].Status,
+                    Priority:     response.message[i].Priority,
+                    name:         response.message[i].name,
+                    detail: <span>
+                            <i
+                            className={
+                              "bx bx-cog font-size-24"
+                            }
+                            style={{cursor:'pointer'}}
+                            ></i>
+                        </span> 
+                  }
+                  index.push(rd)
+                }
+                const setStatus = {
+                  completed: (
+                    <span className="badge bg-success font-size-10">Completed</span>
+                  ),
+                  Waitingtocheck: <span className="badge bg-warning font-size-10">Waiting to check</span>,
+                  Rechecking: <span className="badge bg-danger font-size-10">Rechecking</span>,
+                }
+              
+              const statePriority = {
+                  normal: <span className="badge bg-success font-size-10">normal</span>,
+                  fast: <span className="badge bg-warning font-size-10">fast</span>,
+                  very: <span className="badge bg-danger font-size-10">very</span>,
+                  }
+                settransactions(map(index, order=>({...order, Status:setStatus[order.Status], Priority:statePriority[order.Priority]})))
+              
+              }else{
+                // AWMax: 0.85
+                // AWMin: 0
+                // BBE: "22/02/2020"
+                // HistamineMax: 500
+                // HistamineMin: 0
+                // PHCOAMax: 6
+                // PHCOAMin: 5
+                // PHControlMax: 6
+                // PHControlMin: 5
+                // PO: "PO123456"
+                // PORD: "22/02/2020"
+                // Priority: "normal"
+                // ProductName: "ลูกยอด"
+                // Quantity: "2088"
+                // Recheck: 0
+                // SPG: 100
+                // SaltCOAMax: 29
+                // SaltCOAMin: 23
+                // SaltControlMax: 29
+                // SaltControlMin: 23
+                // Size: "12*199ml"
+                // Status: "Waitingtocheck "
+                // TSSMax: 100
+                // TSSMin: 0
+                // TnMain: 20.8
+                // TnMax: 100
+                // idOrder: 10
+                // idOrders: 10
+                // idPdSpecificChem: 1
+                // idRealTimeOrder: 1
+                // idScfChem: 1
+                // idScfMicro: 1
+                // name: "CN"
+                // timestamp:
+              }
       }else{
-        // AWMax: 0.85
-        // AWMin: 0
-        // BBE: "22/02/2020"
-        // HistamineMax: 500
-        // HistamineMin: 0
-        // PHCOAMax: 6
-        // PHCOAMin: 5
-        // PHControlMax: 6
-        // PHControlMin: 5
-        // PO: "PO123456"
-        // PORD: "22/02/2020"
-        // Priority: "normal"
-        // ProductName: "ลูกยอด"
-        // Quantity: "2088"
-        // Recheck: 0
-        // SPG: 100
-        // SaltCOAMax: 29
-        // SaltCOAMin: 23
-        // SaltControlMax: 29
-        // SaltControlMin: 23
-        // Size: "12*199ml"
-        // Status: "Waitingtocheck "
-        // TSSMax: 100
-        // TSSMin: 0
-        // TnMain: 20.8
-        // TnMax: 100
-        // idOrder: 10
-        // idOrders: 10
-        // idPdSpecificChem: 1
-        // idRealTimeOrder: 1
-        // idScfChem: 1
-        // idScfMicro: 1
-        // name: "CN"
-        // timestamp:
+        return null
       }
+      
       
   })
   }, [])

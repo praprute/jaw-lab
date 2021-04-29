@@ -16,10 +16,15 @@ import "../Tables/datatables.scss"
 
 //get api
 import { isAuthenticated } from './../Authentication/api'
-import {readIdMicroCheckbox,readIdChemCheckbox,addOrder} from './api'
+import {readIdMicroCheckbox,
+        readIdChemCheckbox,
+        addOrder,
+        updateDetail,
+        deleteOrder} from './api'
 
 //SweetAlert
 import SweetAlert from "react-bootstrap-sweetalert"
+
 //store
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
@@ -29,7 +34,7 @@ import Moment from 'moment'
 
 const ModalEdit = props => {
 
-    const { isOpenEdit, toggleEdit } = props 
+    const { isOpenEdit, toggleEdit, orders , spc, tr, bio } = props 
     const [success_msg, setsuccess_msg] = useState(false)
     const [success_error, setsuccess_error] = useState(false)
     const {user, token} = isAuthenticated()
@@ -41,19 +46,11 @@ const ModalEdit = props => {
     const [nameSpcMicro ,   setnameSpcMicro ] = useState([])
     const [selectMicro , setSelectMicro] = useState(1)
     const [pord, setPord] = useState(new Date())
-    const [values, setValues] = useState({
-        pord        : null,
-        bbe         : null,
-        po          : "",
-        productname : "",
-        size        : "",
-        quantity    : ""
-      })
+    const [values, setValues] = useState({})
 
-      const handleChange = name => event => {
-        setValues({ ...values, [name]: event.target.value })
-        
-      }
+    const handleChange = name => event => {
+      setValues({ ...values, [name]: event.target.value })
+    }
 
       useEffect(() => {
         readIdMicroCheckbox(token).then(data => {
@@ -83,8 +80,10 @@ const ModalEdit = props => {
 
       const handleSubmit = event => {
         event.preventDefault()
-        var pord = Moment(values.pord).format('DD/MM/YYYY')
-        var bbe = Moment(values.bbe).format('DD/MM/YYYY')
+        // var pord = Moment(values.pord).format('DD/MM/YYYY')
+        // var bbe = Moment(values.bbe).format('DD/MM/YYYY')
+        var pordEdit = values.PORD
+        var bbeEdit  = values.BBE 
         var priority = ""
         if(normal){
             priority = 0
@@ -93,43 +92,62 @@ const ModalEdit = props => {
         }else if(urgent){
             priority = 2
         }
-        // console.log('pord : ', pord)
-        // console.log('bbe : ', bbe)
-        // console.log('selectChem : ', selectChem)
-        // console.log('selectMicro : ', selectMicro)
-        // console.log('values : ', values)
-        // console.log('priority : ', priority)
-
         var index = {
-            PORD        : pord,
-            BBE         : bbe,
-            PO          : values.po,
-            ProductName : values.productname,
-            Size        : values.size,
-            Quantity    : values.quantity,
+            idOrders    : values.idOrders,
+            PORD        : pordEdit,
+            BBE         : bbeEdit ,
+            PO          : values.PO,
+            ProductName : values.ProductName,
+            Size        : values.Size,
+            Quantity    : values.Quantity,
             idScfChem   : selectChem,
             idScfMicro  : selectMicro,
             Priority    : priority,
         }
-
-        addOrder(token, index).then(data => {
+        updateDetail(token, index).then(data => {
             console.log('response add order : ', data)
             if(data){
                 if(data.success == 'success'){
-                    // console.log('response add order SUCCCESS: ', data)
                 setsuccess_msg(true)  
                 }else{
-                    // console.log('response add order ERROR : ')
                     setsuccess_error(true)
                 }
             }else{
                 setsuccess_error(true)
             }
         })
-        // toggleAddorder()
-        // setsuccess_msg(false)
-        // setsuccess_error(false)
+        
       } 
+
+      const handleDelete = event => {
+        event.preventDefault()
+        var id = {
+          idOrders : values.idOrders
+        }
+        deleteOrder(token, id).then(response => {
+          console.log(response)
+        })
+      }      
+      
+      const [Pord, SetPord] = useState("")
+      const [Bbe , SetBbe] = useState("")
+      //idScfChem Priority
+      useEffect(() => {
+        setValues(orders)
+      }, [orders,bio,tr])
+
+      useEffect(() => {
+        console.log(orders)
+        setSelectChem(orders.idScfChem)
+        switch (orders.Priority){
+          case "0":
+            return setNormal(true), setRush(false) ,setUrgent(false)
+          case "1":
+            return setNormal(false), setRush(true),setUrgent(false)
+          case "2":
+            return setNormal(false), setRush(false),  setUrgent(true)
+        } 
+    },[orders,bio,tr]) 
     return(
         <Modal
                       isOpen={isOpenEdit}
@@ -170,7 +188,7 @@ const ModalEdit = props => {
                   ) : null}
 
                       <div className="modal-header">
-                        <h3 className="modal-title mt-0">Add Order 
+                        <h3 className="modal-title mt-0">Edit Order ID {values.idOrderTested}
                         </h3>
                         <button
                           type="button"
@@ -203,13 +221,14 @@ const ModalEdit = props => {
                                             PORD:
                                         </label>
                                         <div className="col-md-4">
+                                          {/* {values.PORD} */}
                                           <input
                                             className="form-control"
                                             type="date"
                                             name="pord"
-                                            onChange={handleChange('pord')}
-                                            value={values.pord}
-                                            placeholder="PORD:00/00/0000"
+                                            onChange={handleChange('PORD')}
+                                            value={values.PORD}
+                                            // placeholder="PORD:00/00/0000"
                                           />
                                         </div>
                                         <label
@@ -225,8 +244,8 @@ const ModalEdit = props => {
                                             type="date"
                                             // defaultValue="BBE:00/00/0000"
                                             name="bbe"
-                                            onChange={handleChange('bbe')}
-                                            value={values.bbe}
+                                            onChange={handleChange('BBE')}
+                                            value={values.BBE}
                                             placeholder="BBE:00/00/0000"
                                           />
                                         </div>
@@ -245,8 +264,8 @@ const ModalEdit = props => {
                                             className="form-control"
                                             type="text"
                                             name="po"
-                                            onChange={handleChange('po')}
-                                            value={values.po}
+                                            onChange={handleChange('PO')}
+                                            value={values.PO}
                                             placeholder="Order Number"
                                           />
                                         </div>
@@ -265,8 +284,8 @@ const ModalEdit = props => {
                                             className="form-control"
                                             type="text"
                                             name="productname"
-                                            onChange={handleChange('productname')}
-                                            value={values.productname}
+                                            onChange={handleChange('ProductName')}
+                                            value={values.ProductName}
                                             placeholder="Product Name"
                                           />
                                         </div>
@@ -285,8 +304,8 @@ const ModalEdit = props => {
                                             className="form-control"
                                             type="text"
                                             name="size"
-                                            onChange={handleChange('size')}
-                                            value={values.size}
+                                            onChange={handleChange('Size')}
+                                            value={values.Size}
                                             placeholder="Pack Size"
                                           />
                                         </div>
@@ -305,8 +324,8 @@ const ModalEdit = props => {
                                             className="form-control"
                                             type="text"
                                             name="quantity"
-                                            onChange={handleChange('quantity')}
-                                            value={values.quantity}
+                                            onChange={handleChange('Quantity')}
+                                            value={values.Quantity}
                                             placeholder="Quantity"
                                           />
                                         </div>
@@ -451,4 +470,19 @@ const ModalEdit = props => {
                     </Modal>   
     )
 }
-export default  ModalEdit;
+
+ModalEdit.propTypes = {
+  orders: PropTypes.array,
+  spc: PropTypes.array,
+  tr: PropTypes.array,
+  bio: PropTypes.array
+}
+
+const mapStateToProps = state => ({
+  orders: state.DetailOrder.Detail,
+  spc: state.DetailOrder.SpecificChem,
+  tr: state.DetailOrder.TestResultLasted,
+  bio:  state.DetailOrder.SpecificBio,
+})
+
+export default connect(mapStateToProps)(withRouter(ModalEdit))

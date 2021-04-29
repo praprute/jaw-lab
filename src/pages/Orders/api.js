@@ -17,8 +17,24 @@ export const getAllOrder = (token) => {
         .catch(err => console.log(err));
   };
 
+  export const getAllOrderLab = (token) => {
+    return fetch(`${API}/readOrdertoCheck`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+        //   body : JSON.stringify({id : farmer})
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+  };
+
 export const getRecheckOrder = (token) => {
-    return fetch(`http://localhost:3031/api/readRecheckOrder`, {
+    return fetch(`${API}/readRecheckOrder`, {
         method: "POST",
         headers: {
             Accept: 'application/json',
@@ -54,6 +70,56 @@ export const readOrderById = (token,idOrders) => {
         })
         .catch(err => console.log(err));
   };
+
+export const updateDetail = (token,index) => {
+   
+  return fetch(`${API}/updateOrder`, {
+      method: "POST",
+      headers: {
+          Accept: 'application/json',
+          "Content-type": "application/json",
+          Authorization:`Bearer ${token}`
+        },
+        body : JSON.stringify(index)
+  })
+      .then(response => {
+          return response.json();
+      })
+      .catch(err => console.log(err));
+}
+
+export const reSend = (token,idOrders) => {
+    return fetch(`${API}/reSend`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(idOrders)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+export const deleteOrder = (token, idOrders) => {
+    console.log('deleteOrder id : ' , idOrders)
+    return fetch(`${API}/deleteOrder`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(idOrders)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
 
 export const readAllSpecificChemById = (token,idPdSpecificChem) => {
     
@@ -153,6 +219,22 @@ export const readIdMicroCheckbox = (token) => {
 
 export const addOrder = (token, index) => {
     return fetch(`${API}/addOrder`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+export const Addtestreport = (token, index) => {
+    return fetch(`${API}/Addtestreport`, {
         method: "POST",
         headers: {
             Accept: 'application/json',

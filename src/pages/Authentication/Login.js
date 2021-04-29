@@ -34,7 +34,9 @@ import {signInUser, authenticate, isAuthenticated} from './api'
 
 const Login = props => {
   let history = useHistory();
-
+  // const handleValidSubmit = (event, values) => {
+  //   props.loginUser(values, props.history)
+  // }
   const signIn = (res, type) => {
     const { socialLogin } = props
     if (type === "google" && res) {
@@ -87,40 +89,40 @@ const Login = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    console.log('check submit : ', history)
-    history.push("/")
+    // console.log('check submit : ',)
+    // history.push("/")
     // return (<Redirect to="/Orders" /> )
-    // signInUser(values).then(response => {
-    //   console.log(response)
-    //   if(response){
-    //     if(response.success == "success"){
-    //     console.log(response)
-    //     setregisSuc(true)
-    //     settextResponse(response.message_th)
-    //     setValues({ ...values, username:"" , password:""})
-    //     const authIdex = {
-    //       user:response.user,
-    //       token:response.token
-    //     }
-    //     // authenticate(authIdex)
+    signInUser(values).then(response => {
+      console.log(response)
+      if(response){
+        if(response.success == "success"){
+        console.log(response)
+        setregisSuc(true)
+        settextResponse(response.message_th)
+        setValues({ ...values, username:"" , password:""})
+        const authIdex = {
+          user:response.user,
+          token:response.token
+        }
+        // authenticate(authIdex)
         
-    //     authenticate({
-    //       user:response.user,
-    //       token:response.token
-    //     }, () => {
-    //     history.push("/dashboard")
-    //   } )
-    //     // 
-    //   }else{
-    //     console.log(response)
-    //     setregisFail(true)
-    //     settextResponse(response.message_th)
-    //   }
-    //   }else{
-    //     return null
-    //   }
+        authenticate({
+          user:response.user,
+          token:response.token
+        }, () => {
+        history.push("/dashboard")
+      } )
+        // 
+      }else{
+        console.log(response)
+        setregisFail(true)
+        settextResponse(response.message_th)
+      }
+      }else{
+        return null
+      }
       
-    // })
+    })
     // console.log(props.registerUser(values))
   }
 
@@ -178,9 +180,9 @@ const Login = props => {
                   <div className="p-2">
                     <AvForm
                       className="form-horizontal"
-                      // onValidSubmit={(e, v) => {
-                      //   handleValidSubmit(e, v)
-                      // }}
+                      onValidSubmit={(e, v) => {
+                        handleValidSubmit(e, v)
+                      }}
                     >
                       {regisSuc ? (
                         <Alert color="success">
@@ -232,6 +234,14 @@ const Login = props => {
                         >
                           Log In
                         </button>
+
+                        {/* <button
+                          className="btn btn-primary btn-block waves-effect waves-light"
+                          type="submit"
+                          onClick={handleSubmit}
+                        >
+                          test
+                        </button> */}
                       </div>
                       <div className="mt-4 text-center">
                       </div>

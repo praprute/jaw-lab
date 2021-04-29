@@ -204,8 +204,8 @@ const UiSweetAlert = () => {
                 </Col>
                 <Col xl={3} lg={4} sm={6} className="mb-2">
                   <div className="p-3">
-                    <p>
-                      A warning message, with a function attached to the
+                    <p>A warning message, with a function attached to the
+                      
                       "Confirm"-button...
                     </p>
                     <Button
