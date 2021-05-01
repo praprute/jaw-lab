@@ -21,21 +21,31 @@ import Moment from 'moment'
 //get api
 import {getAllOrder,
   readOrderById,
-  Addtestreport} from './api'
+  Addtestreport, readTestResultlasted, 
+  Recheck,WaitMicro,readFG,updateFG } from './api'
 import { map, result } from "lodash";
 import { orders } from "common/data";
 import { isAuthenticated } from '../Authentication/api'
+
+//SweetAlert
+import SweetAlert from "react-bootstrap-sweetalert"
 
 //store
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
+import { AddProductDetail, AddSpecificDetail, AddTestResultlasted, AddSpecificBioDetail} from 'store/actions'
 
 const ModalTestReport = props => {
 
-    const {isOpenTR, toggleTR, orders , spc, tr, bio} = props
+    const {isOpenTR, toggleTR, orders , spc, onAddTestResult, tr, bio} = props
     const {user, token} = isAuthenticated()
-    const [modal, setModal] = useState(false);
+    const [success_msg, setsuccess_msg] = useState(false)
+    const [success_error, setsuccess_error] = useState(false)
+    const [optionTR, setOptionTR] = useState(false)
+    const [modal, setModal] = useState(false)
+    const [dynamic_title, setdynamic_title] = useState("")
+    const [dynamic_description, setdynamic_description] = useState("")
     const [detailById, setdetailById] = useState([{
         idOrderTested:"",
         BBE:"",
@@ -45,7 +55,6 @@ const ModalTestReport = props => {
         Size:"",
         Quantity:""
       }])
-    // const toggle = () => setModal(!modal);
     
     const [resultChem , setresultChem] = useState(
       [
@@ -66,43 +75,145 @@ const ModalTestReport = props => {
         { int: false, coa: false, val: "", key: 'S. aureus' }
       ]) 
 
-    const [values, setValues] = useState({
-      // idOrders      :detailById.idOrderTested,
-      // PORD          :detailById.PORD,
-      // BBE           :detailById.BBE,
-      // PO            :detailById.PO,
-      // ProductName   :detailById.ProductName,
-      // Recheck       :detailById.Recheck,
-      // Size          :detailById.Size,
-      // Quantity      :detailById.Quantity,
-      // idSpfChem     :detailById.idPdSpecificChem,
-      // Tn            :null,
-      // PH            :null,
-      // Salt          :null,
-      // Tss           :null,
-      // Histamine     :null,
-      // SPG           :null,
-      // Aw            :null,
-      // idSpfMicro    :1,
-      // APC           :null,
-      // Yeasts        :null,
-      // EColi         :null,
-      // Coliform      :null,
-      // Saureus       :null,
-      // tempPH        :null,
-      // tempAW        :null,
-      // tempTSS       :null,
-      // tempSPG       :null
-      })
-
+    const [values, setValues] = useState({})
+    const [oldValues, setOldValues] = useState({})
       const handleChange = name => event => {
         setValues({ ...values, [name]: event.target.value })
         // console.log(values)
       }
 
+      const fetchTestResultlasted = (token, idOrders) => {
+        readTestResultlasted(token, idOrders).then(data => {
+          console.log(' readTestResultlasted :',data)
+          if(data){
+            if(data.success == 'success'){
+              setValues({
+                idOrders      :detailById.idOrders,
+                PORD          :detailById.PORD,
+                BBE           :detailById.BBE,
+                PO            :detailById.PO,
+                ProductName   :detailById.ProductName,
+                Recheck       :detailById.Recheck,
+                Size          :detailById.Size,
+                Quantity      :detailById.Quantity,
+                idSpfChem     :detailById.idPdSpecificChem,
+                Tn            :null,
+                PH            :null,
+                Salt          :null,
+                Tss           :null,
+                Histamine     :null,
+                SPG           :null,
+                Aw            :null,
+                idSpfMicro    :1,
+                APC           :null,
+                Yeasts        :null,
+                EColi         :null,
+                Coliform      :null,
+                Saureus       :null,
+                TempPH        :null,
+                TempAW        :null,
+                TempTSS       :null,
+                TempSPG       :null,
+              })
+              if(!data.message){
+                // setTRLasted({})
+                // onAddTestResult({})
+                setsuccess_error(true)
+              }else{
+                // setTRLasted(data.resulted)
+                onAddTestResult(data.resulted)
+                setsuccess_msg(true) 
+                setdynamic_title("Tested Success")
+                setdynamic_description("Order has been tested")
+              }
+            }else{
+              // setTRLasted({})
+              setsuccess_error(true)
+              setdynamic_title("Server Problem")
+              setdynamic_description("Server has break down!")
+              onAddTestResult({})
+            }
+          }else{
+            return null
+          }
+        })
+      }
+
+      function countDailyFinishgood(){
+        let Tn = 0
+        let PH = 0
+        let Salt = 0
+        let Tss = 0
+        let Histamine = 0
+        let SPG = 0
+        let Aw = 0
+        console.log('ch function : ' , oldValues.Tn + "---" + values.Tn)
+
+        if(oldValues.Tn == values.Tn){
+          Tn = Tn
+        }else{
+          Tn = Tn+1
+        }
+        if(oldValues.PH == values.PH){
+          PH = PH
+        }else{
+          PH = PH+1
+        }
+        if(oldValues.Salt == values.Salt){
+          Salt = Salt
+        }else{
+          Salt = Salt+1
+        }
+        if(oldValues.Tss == values.Tss){
+          Tss = Tss
+        }else{
+          Tss = Tss+1
+        }
+        if(oldValues.Histamine == values.Histamine){
+          Histamine = Histamine
+        }else{
+          Histamine = Histamine+1
+        }
+        if(oldValues.SPG == values.SPG){
+          SPG = SPG
+        }else{
+          SPG = SPG+1
+        }
+        if(oldValues.Aw == values.Aw){
+          Aw = Aw
+        }else{
+          Aw = Aw+1
+        }
+
+        // console.log('Tn : ' , Tn)
+        // console.log('PH : ' , PH)
+        // console.log('Salt : ' , Salt)
+        // console.log('Tss : ' , Tss)
+        // console.log('Histamine : ' , Histamine)
+        // console.log('SPG : ' , SPG)
+        // console.log('Aw : ' , Aw)
+
+        var index = {
+          Tn: Tn ,
+          PH: PH,
+          Salt: Salt ,
+          Tss: Tss,
+          Histamine: Histamine ,
+          SPG: SPG,
+          Aw: Aw,
+        }
+
+        console.log('index update FG : ', index)
+        updateFG(token,index).then(data => {
+          if(data){
+            console.log('updateFG : ', data)
+          }
+        })
+      }
+
       const handleTest = event => {
         event.preventDefault()
-        console.log('values test : ' , values)
+        // console.log('values test : ' , values)
         var index = 
         {
           idOrders: values.idOrders,
@@ -116,33 +227,115 @@ const ModalTestReport = props => {
           SPG: values.SPG ,
           Aw: values.Aw ,
           idSpfMicro: parseInt(values.idSpfMicro)  ,
-          APC: values.APC ,
-          Yeasts: values.Yeasts ,
-          EColi: values.EColi ,
-          Coliform: values.Coliform ,
-          Saureus: values.Saureus ,
-          tempPH: values.tempPH ,
-          tempAW: values.tempAW ,
-          tempTSS: values.tempTSS  ,
-          tempSPG: values.tempSPG 
+          APC: parseInt(values.APC) ,
+          Yeasts: parseInt(values.Yeasts) ,
+          EColi: parseInt(values.EColi) ,
+          Coliform: parseInt(values.Coliform) ,
+          Saureus: parseInt(values.Saureus) ,
+          TempPH: values.TempPH ,
+          TempAW: values.TempAW ,
+          TempTSS: values.TempTSS ,
+          TempSPG: values.TempSPG 
         }
+        
+        console.log('value test :',index )
         Addtestreport(token, index).then(data => {
           if(data){
             console.log('test data : ', data)
+            fetchTestResultlasted(token , values.idOrders)
+            countDailyFinishgood()
           }
         })
-        
       }
+
+      const handleRecheck = (event) => {
+        event.preventDefault();
+        // console.log('values.Recheck : ',values.Recheck)
+        var index = {
+          idOrders: values.idOrders,
+          Recheck : values.Recheck
+        }
+        Recheck(token, index).then(data => {
+          if(data){
+            if(data.success == "success"){
+              setsuccess_msg(true) 
+              setdynamic_title("Send Recheck Success")
+              setdynamic_description("Order has been rechecking")
+            }else{
+              setsuccess_error(true)
+              setdynamic_title("Send Recheck Error")
+              setdynamic_description("Order has been rechecking error !")
+            }
+          }else{
+            setsuccess_error(true)
+            setdynamic_title("Server Problem")
+            setdynamic_description("Server has break down!")
+          }
+        })
+      }
+
+      const handleWaitMicro = (event) => {
+        event.preventDefault();
+        // console.log('values.Recheck : ',values.Recheck)
+        var index = {
+          idOrders: values.idOrders,
+        }
+        WaitMicro(token, index).then(data => {
+          if(data){
+            if(data.success == "success"){
+              setsuccess_msg(true)
+              setdynamic_title("Change Status Success")
+              setdynamic_description("Change Status => Wait to microbiological")
+            }else{
+              setsuccess_error(true)
+              setdynamic_title("Change Status Error")
+              setdynamic_description("Change Status => Wait to microbiological Error")
+            }
+          }else{
+            setsuccess_error(true)
+            setdynamic_title("Server Problem")
+            setdynamic_description("Server has break down!")
+          }
+        })
+      }
+
+      useEffect(() => {
+        var current_datetime = new Date()
+        let formatted_date_now = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + (current_datetime.getDate())
+        //let formatted_DateTime_now = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + (current_datetime.getDate())+"T"+current_datetime.getHours()+":"+current_datetime.getMinutes()+":"+current_datetime.getSeconds()
+        // console.log('formatted_date_now : ' , formatted_date_now)
+        readFG(token).then(data => {
+          if(data){
+            console.log('readFG : ', data)
+            if(data.success == 'success' && data.message.length > 0){
+              // setOldValues({
+              //   Tn            :data.message[0].TN,
+              //   PH            :data.message[0].PH,
+              //   Salt          :data.message[0].SALT,
+              //   Tss           :data.message[0].TSS,
+              //   Histamine     :data.message[0].HISTAMINE,
+              //   SPG           :data.message[0].SPG,
+              //   Aw            :data.message[0].AW,
+              //   })
+            }
+          }
+        })
+      }, [])
+
+      useEffect(() => {
+        setOptionTR(false)
+      }, [toggleTR])
+
       useEffect(() => {
         // setTRLasted(tr)
         setdetailById(orders)
-        console.log('order : ', orders)
+        // console.log('order : ', orders)
     },[orders,bio,tr]) 
 
     useEffect(() => {
 
         if(tr[0] != undefined){
-          console.log('tr[0] : ',tr[0])
+          // console.log('tr[0] : ',tr[0])
             setresultChem(tr[0])
             setresultMicro(tr[1])
             setValues({
@@ -168,11 +361,21 @@ const ModalTestReport = props => {
               EColi         :tr[1][2].val,
               Coliform      :tr[1][3].val,
               Saureus       :tr[1][4].val,
-              tempPH        :tr[0][3].temp,
-              tempAW        :tr[0][4].temp,
-              tempTSS       :tr[0][5].temp,
-              tempSPG       :tr[0][6].temp
+              TempPH        :tr[0][3].temp,
+              TempAW        :tr[0][4].temp,
+              TempTSS       :tr[0][5].temp,
+              TempSPG       :tr[0][6].temp,
               })
+              setOldValues({
+                Tn            :tr[0][0].val,
+                PH            :tr[0][3].val,
+                Salt          :tr[0][1].val,
+                Tss           :tr[0][5].val,
+                Histamine     :tr[0][2].val,
+                SPG           :tr[0][6].val,
+                Aw            :tr[0][4].val,
+                })
+            
         }else{
             setresultChem([
                 { keyInput:"Tn"        ,int:false , key: "TN(g/L)", coa: false , val:"" , temp:false },
@@ -213,15 +416,13 @@ const ModalTestReport = props => {
                 EColi         :null,
                 Coliform      :null,
                 Saureus       :null,
-                tempPH        :null,
-                tempAW        :null,
-                tempTSS       :null,
-                tempSPG       :null,
+                TempPH        :null,
+                TempAW        :null,
+                TempTSS       :null,
+                TempSPG       :null,
                 })
         }
     }, [tr])
-
-    
 
     return(
                     <Modal
@@ -231,6 +432,37 @@ const ModalTestReport = props => {
                       // dialogClassName="modal-90w"
                       size="xl"
                     >
+                      {success_msg ? (
+                    <SweetAlert
+                      title={dynamic_title}
+                      success
+                    //   showCancel
+                      confirmBtnBsStyle="success"
+                    //   cancelBtnBsStyle="danger"
+                      onConfirm={() => {
+                        setsuccess_msg(false)
+                        setOptionTR(true)
+                      }}
+                    >
+                      {dynamic_description}
+                    </SweetAlert>
+                  ) : null}
+
+                    {success_error ? (
+                    <SweetAlert
+                      title={dynamic_title}
+                      danger
+                    //   showCancel
+                      confirmBtnBsStyle="danger"
+                    //   cancelBtnBsStyle="danger"
+                      onConfirm={() => {
+                        setsuccess_error(false)
+                      }}
+                    >
+                      {dynamic_description}
+                    </SweetAlert>
+                  ) : null}
+
                       <div className="modal-header">
                         <h3 className="modal-title mt-0">Order Test Result : {detailById.PO}
                         </h3>
@@ -388,7 +620,7 @@ const ModalTestReport = props => {
                                 
                                 </Col>
                                 <Col xs="3">
-                                  {index.temp ? (
+                                  {index.tkTemp ? (
                                     // <div>
                                     // <h6>{index.temp}</h6>
                                     // </div>
@@ -540,13 +772,44 @@ const ModalTestReport = props => {
                         
                       
                       </div>
-                      <ModalFooter>
-                          <Button color="primary" onClick={(event) => {
+                      {optionTR ? (
+                        <ModalFooter  style={{width:'100%',display:'flex', alignItems: 'center'}}>
+                          <Row style={{width:'100%',display:'flex', alignItems: 'center'}}>
+                            <Col xs="12" md="8" style={{display:'flex', alignItems: 'center', justifyContent:'flex-start'}}>
+                        <Button color="warning" className="w-lg" onClick={(event) => {
+                          // toggleTR()
+                          handleRecheck(event)
+                        }}>Recheck</Button>&nbsp;&nbsp;
+                        <Button color="primary" className="w-lg" onClick={(event) => {
+                          // toggleTR()
+                          // handleRecheck(event)
+                          handleWaitMicro(event)
+                        }}>Wait to microbiological</Button>&nbsp;&nbsp;
+                        </Col>
+                        <Col  xs="12" md="4" style={{display:'flex', alignItems: 'center', justifyContent:'flex-end'}}>
+                        <Button color="primary" className="w-lg" onClick={toggleTR}>Save</Button>&nbsp;&nbsp;
+                        <Button color="danger" className="w-lg" onClick={() => {
+                          toggleTR()
+                          setOptionTR(false)
+                        }}>Canel</Button>
+                        </Col>
+                          </Row>
+                        
+                      </ModalFooter>
+                        ) : (
+                          <ModalFooter>
+                        
+                          <Button color="primary" className="w-lg" onClick={(event) => {
                             // toggleTR()
                             handleTest(event)
                           }}>TEST</Button>{' '}
-                          <Button color="secondary" onClick={toggleTR}>Cancel</Button>
+                          <Button color="danger" className="w-lg" onClick={(event) => {
+                            toggleTR()
+                            setOptionTR(false)
+                          }}>Cancel</Button>
                         </ModalFooter>
+                        )}
+                      
                     </Modal>   
     )
 }
@@ -565,4 +828,11 @@ ModalTestReport.propTypes = {
     bio:  state.DetailOrder.SpecificBio,
   })
 
-  export default connect(mapStateToProps)(withRouter(ModalTestReport))
+  const mapDispatchToProps = dispatch => ({
+    onAddDetail: (detail) => dispatch(AddProductDetail(detail)),
+    onAddSpcChem: (detailSpcChem) => dispatch(AddSpecificDetail(detailSpcChem)),
+    onAddTestResult: (detailSpcChem) => dispatch(AddTestResultlasted(detailSpcChem)),
+    onAddSpcBio: (detailSpcChem) => dispatch(AddSpecificBioDetail(detailSpcChem)),
+  })
+
+  export default connect(mapStateToProps,mapDispatchToProps)(withRouter(ModalTestReport))

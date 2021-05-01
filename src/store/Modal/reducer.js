@@ -6,14 +6,16 @@ import {
     ADD_TESTRESULT_LASTED,
     GET_TESTRESULT_LASTED,
     ADD_SPECIFIC_BIO_DETAIL,
-    GET_SPECIFIC_BIO_DETAIL
+    GET_SPECIFIC_BIO_DETAIL,
+    ADD_FG,
+    GET_FG
   } from "./actionTypes"
 
 const INIT_STATE = {
    Detail:{},
    SpecificChem:{},
    TestResultLasted:{},
-   SpecificBio:{}
+   SpecificBio:{},
   }
 
 const DetailOrder = (state = INIT_STATE, action) => {
@@ -28,7 +30,7 @@ const DetailOrder = (state = INIT_STATE, action) => {
             }
         
         case ADD_SPECIFIC_DETAIL:
-            console.log('spc : ', action.payload)
+            // console.log('spc : ', action.payload)
                 return {
                     ...state,
                     SpecificChem: action.payload,
@@ -55,10 +57,12 @@ const DetailOrder = (state = INIT_STATE, action) => {
     
         case GET_SPECIFIC_BIO_DETAIL:
                     return state
-
+        
             default:
                 // console.log('test defual fredux')
                 return state
+        
+
     }
 }
 

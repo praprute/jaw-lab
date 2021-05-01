@@ -105,7 +105,7 @@ const ModalEdit = props => {
             Priority    : priority,
         }
         updateDetail(token, index).then(data => {
-            console.log('response add order : ', data)
+            // console.log('response add order : ', data)
             if(data){
                 if(data.success == 'success'){
                 setsuccess_msg(true)  

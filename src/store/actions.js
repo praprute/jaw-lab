@@ -32,3 +32,6 @@ export * from "./tasks/actions"
 
 // contacts
 export * from "./contacts/actions"
+
+//DFGST
+export * from './ChartFGST/actions'

@@ -1,10 +1,23 @@
-import React from "react"
+import PropTypes from "prop-types"
+import React , {useState, useEffect} from "react"
 import ReactApexChart from "react-apexcharts"
+import { readFG } from './../Orders/api'
+import { isAuthenticated } from './../Authentication/api'
+import { withRouter, Link, Redirect } from "react-router-dom"
+//store
+import { connect } from "react-redux"
+import { addFG, getFG } from 'store/actions'
 
-const dountchart = () => {
-  const series = [5, 5, 5, 5, 5, 5]
-  const options = {
-    labels: ["TN", "PH", "SALT", "TSS", "HISTAMINE", "SPG"],
+const dountchart = props => {
+
+  // const {user, token} = isAuthenticated()
+  // const [fg, setFG] = useState({}) 
+
+  const {FG, onGetFG} = props
+
+  const [series, setseries] = useState(FG)
+  const [option, setOption] = useState( {
+    labels: ["TN", "PH", "SALT", "TSS", "HISTAMINE", "SPG", "AW"],
     colors: ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0",
     "#3F51B5", "#546E7A"],
     legend: {
@@ -35,12 +48,19 @@ const dountchart = () => {
         },
       },
     ],
-  }
+  })
 
+  // const series = [FG.TN, FG.PH, FG.SALT, FG.TSS, FG.HISTAMINE, FG.SPG]
+  // const series = [0,0,0,0,0,0,0]
+  useEffect(() => {
+    console.log('props FG : ', FG)
+    setseries(FG)
+      // setseries([FG.TN, FG.PH, FG.SALT, FG.TSS, FG.HISTAMINE, FG.SPG, FG.AW])
+  },[FG])
 
   return (
     <ReactApexChart
-      options={options}
+      options={option}
       series={series}
       type="donut"
       height="380"
@@ -48,4 +68,20 @@ const dountchart = () => {
   )
 }
 
-export default dountchart
+dountchart.propTypes = {
+  FG: PropTypes.array,
+  onGetFG: PropTypes.func,
+}
+
+const mapStateToProps = state => ({
+  FG: state.DFGST.DFG
+})
+
+const mapDispatchToProps = dispatch => ({
+  onGetFG: (detail) => dispatch(getFG(detail)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(dountchart))

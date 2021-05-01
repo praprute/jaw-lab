@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import React, { useEffect, useState } from "react"
 import MetaTags from 'react-meta-tags';
 import {
@@ -42,10 +42,16 @@ import { withTranslation } from "react-i18next"
 //api
 import { isAuthenticated } from './../Authentication/api'
 import { useHistory } from 'react-router-dom'
+import { readFG } from './../Orders/api'
+
+//store
+import { connect } from "react-redux"
+import { addFG, getFG } from 'store/actions'
 
 const Dashboard = props => {
 
   const history = useHistory();
+  const { FG, onAddFG } = props
   const [modal, setmodal] = useState(false)
   const [subscribemodal, setSubscribemodal] = useState(false)
   const {user, token} = isAuthenticated()
@@ -74,8 +80,42 @@ const Dashboard = props => {
     { title: "Year", linkto: "#", isActive: true },
   ]
 
+  const [fg, setFG] = useState({}) 
+  const [renFG, setRenFG] = useState(false)
+  // useEffect(() => {
+  //   readFG(token).then(data => {
+  //     if(data){
+  //       if(data.success == 'success' && data.message.length > 0){
+  //         // console.log('readFG message: ', data)
+  //         setFG(data.message[0])
+  //       }
+  //     }
+  //   })
+  // }, [])
+
+  // const DFG = (fg) => {
+  //   return (<DonutChart index={fg}/>)
+  // }
 
   useEffect(() => {
+    readFG(token).then(data => {
+          if(data){
+            // if(data.success == 'success' && data.message.length > 0){
+              // console.log('readFG message: ', data.message[0])
+              // setFG([data.message[0].TN, data.message[0].PH, data.message[0].SALT, data.message[0].TSS, data.message[0].HISTAMINE, data.message[0].SPG, data.message[0].AW])
+              onAddFG([data.message[0].TN, data.message[0].PH, data.message[0].SALT, data.message[0].TSS, data.message[0].HISTAMINE, data.message[0].SPG, data.message[0].AW])
+              setTimeout(() => {
+                setRenFG(true)
+              }, 1000);
+             
+            // }
+          }
+        })
+  }, [])
+
+  useEffect(() => {
+    
+
     if(!token || !user){
       history.push('/login')
     }
@@ -162,9 +202,13 @@ const Dashboard = props => {
                   <Row>
                     <Col md="6" xs="12">
                     <span>Finish Good</span>Sanitize
-                    <DonutChart />
+                    {renFG ? (
+                      <DonutChart />
+                    ) : (
+                      null
+                    ) }
                     </Col>
-                    <Col  md="6" xs="12">
+                    <Col  md="6" xs="12">  
                     <span>Sanitize</span>
                     <DountchartST />
                     </Col>
@@ -395,4 +439,29 @@ Dashboard.propTypes = {
   t: PropTypes.any
 }
 
-export default withRouter(withTranslation()(Dashboard))
+// export default withRouter(withTranslation()(Dashboard))
+
+Dashboard.propTypes = {
+  FG: PropTypes.array,
+  onAddFG: PropTypes.func,
+}
+
+const mapStateToProps = state => ({
+  // orders: state.DetailOrder.Detail,
+  // spc: state.DetailOrder.SpecificChem,
+  FG: state.DFGST.DFG
+})
+
+const mapDispatchToProps = dispatch => ({
+  onAddFG: (detail) => dispatch(addFG(detail)),
+  // onAddSpcChem: (detailSpcChem) => dispatch(GET_FG(detailSpcChem)),
+  // onAddTestResult: (detailSpcChem) => dispatch(AddTestResultlasted(detailSpcChem)),
+  // onAddSpcBio: (detailSpcChem) => dispatch(AddSpecificBioDetail(detailSpcChem)),
+})
+
+// addFG, GET_FG
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(withTranslation()(Dashboard)))

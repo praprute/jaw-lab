@@ -185,25 +185,25 @@ const Labatorypage = props => {
                     
                     <TabPane tabId="2" id="urgent">
                       <div>
-                      <OrderTable page={"lab"} tricker={"urgent"} toggle={toggleModal} toggleEdit={toggleModalEdit} />
+                      <OrderTable page={"lab"} tricker={"urgent"} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
 
                     <TabPane tabId="3" id="wait">
                       <div>
-                      <OrderTable page={"lab"} tricker={"micro"} toggle={toggleModal} toggleEdit={toggleModalEdit}  />
+                      <OrderTable page={"lab"} tricker={"micro"} toggle={toggleModal} toggleEdit={toggleModalEdit}  toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
 
                     <TabPane tabId="4" id="processing">
                       <div>
-                      <OrderTable page={"lab"} tricker={"recheck"} toggle={toggleModal} toggleEdit={toggleModalEdit}  />
+                      <OrderTable page={"lab"} tricker={"recheck"} toggle={toggleModal} toggleEdit={toggleModalEdit}  toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
 
                     <TabPane tabId="5" id="pass">
                       <div>
-                      <OrderTable page={"lab"} tricker={"pass"} toggle={toggleModal} toggleEdit={toggleModalEdit} />
+                      <OrderTable page={"lab"} tricker={"pass"} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
                   </TabContent>

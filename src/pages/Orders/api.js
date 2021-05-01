@@ -1,5 +1,5 @@
-// import { API } from './../../configAPI'
-const API = "http://localhost:3031/api"
+import { API } from './../../configAPI'
+// const API = "http://localhost:3031/api"
 
 export const getAllOrder = (token) => {
     return fetch(`${API}/readAllOrder`, {
@@ -233,6 +233,7 @@ export const addOrder = (token, index) => {
         .catch(err => console.log(err));
 }
 
+//Test Values
 export const Addtestreport = (token, index) => {
     return fetch(`${API}/Addtestreport`, {
         method: "POST",
@@ -248,6 +249,79 @@ export const Addtestreport = (token, index) => {
         })
         .catch(err => console.log(err));
 }
+
+//Recheck
+export const Recheck = (token, index) => {
+    console.log('index recheck : ', index)
+    return fetch(`${API}/Recheck`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+//WaitMicro
+export const WaitMicro = (token, index) => {
+    console.log('index recheck : ', index)
+    return fetch(`${API}/WaitMicro`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+//readFG
+export const readFG = (token, index) => {
+    // console.log('index recheck : ', index)
+    return fetch(`${API}/readFG`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+//updateFG
+export const updateFG = (token, index) => {
+    // console.log('index recheck : ', index)
+    return fetch(`${API}/updateFGadFG`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
 // const fetchDetail = (token, idOrders) => {
   //   readTestResultlasted(token, idOrders).then(data => {
   //     console.log(' readTestResultlasted :',data)

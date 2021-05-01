@@ -6,9 +6,8 @@ import {
     ADD_TESTRESULT_LASTED,
     GET_TESTRESULT_LASTED,
     ADD_SPECIFIC_BIO_DETAIL,
-    GET_SPECIFIC_BIO_DETAIL
+    GET_SPECIFIC_BIO_DETAIL,
   } from "./actionTypes"
-
 
   export const getProductDetail = () => ({
     type: GET_PRODUCT_DETAIL

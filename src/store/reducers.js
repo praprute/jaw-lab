@@ -15,6 +15,9 @@ import ecommerce from "./e-commerce/reducer"
 //DetailOrder
 import DetailOrder from './Modal/reducer'
 
+//DFGST
+import DFGST from './ChartFGST/reducer'
+
 //Calendar
 import calendar from "./calendar/reducer"
 
@@ -39,6 +42,7 @@ import contacts from "./contacts/reducer"
 const rootReducer = combineReducers({
   // public
   DetailOrder,
+  DFGST,
   Layout,
   Login,
   Account,
