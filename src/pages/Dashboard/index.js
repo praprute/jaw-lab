@@ -43,28 +43,40 @@ import { withTranslation } from "react-i18next"
 import { isAuthenticated } from './../Authentication/api'
 import { useHistory } from 'react-router-dom'
 import { readFG } from './../Orders/api'
-
+import {updateCardDS, readCardDS} from './api'
 //store
 import { connect } from "react-redux"
 import { addFG, getFG } from 'store/actions'
 
+import ModalDetail from './../Orders/ModalDetail'
+import ModalSelectCOA from './../Orders/ModalSelectCOA'
 const Dashboard = props => {
 
   const history = useHistory();
   const { FG, onAddFG } = props
-  const [modal, setmodal] = useState(false)
+  const [modal, setModal] = useState(false)
   const [subscribemodal, setSubscribemodal] = useState(false)
   const {user, token} = isAuthenticated()
-  const reports = [
-    { title: "All Sample", iconClass: "bxs-cart-add", description: "1,235" },
-    { title: "COA Export", iconClass: "bxs-archive-out", description: "35, 723" },
+  const [recheck, setrecheck] = useState(null)
+  const [allSample, setallSample] = useState(null)
+  const [coa, setcoa] = useState(null)
+  const [modalCoa, setModalCOA] = useState(false)
+  const [reports, setReports] = useState([
+    { title: "All Sample", iconClass: "bxs-cart-add", description: 0 },
+    { title: "COA Export", iconClass: "bxs-archive-out", description: 0 },
     {
       title: "Recheck",
       iconClass: "bxs-hourglass-top",
-      description: "16.2",
+      description: 0,
     },
-  ]
-
+  ])
+  const toggleModal = () => {
+    setModal(!modal)
+  }
+  const toggleModalCOA = () => {
+    setModalCOA(!modalCoa)
+    setModal(!modal)
+  }
   const snitizeReport = [
     { title: "Swab", iconClass: "bxs-cart-add", description: "1,235" },
     { title: "Air", iconClass: "bx-wind", description: "35, 723" },
@@ -104,9 +116,9 @@ const Dashboard = props => {
               // console.log('readFG message: ', data.message[0])
               // setFG([data.message[0].TN, data.message[0].PH, data.message[0].SALT, data.message[0].TSS, data.message[0].HISTAMINE, data.message[0].SPG, data.message[0].AW])
               onAddFG([data.message[0].TN, data.message[0].PH, data.message[0].SALT, data.message[0].TSS, data.message[0].HISTAMINE, data.message[0].SPG, data.message[0].AW])
-              setTimeout(() => {
+              // setTimeout(() => {
                 setRenFG(true)
-              }, 1000);
+              // }, 1000);
              
             // }
           }
@@ -114,19 +126,59 @@ const Dashboard = props => {
   }, [])
 
   useEffect(() => {
-    
+updateCardDS(token)
+    readCardDS(token).then(data => {
+      if(data){
+        // setvaluesDS(data.message[0])
+      // console.log('readCardDS : ', data)
+      setReports([
+        { 
+          title: "All Sample", 
+          iconClass: "bxs-cart-add", 
+          description: data.message[0].ALLSample },
+        { 
+          title: "COA Export", 
+          iconClass: "bxs-archive-out",
+          description: data.message[0].COAExprot },
+        {
+          title: "Recheck",
+          iconClass: "bxs-hourglass-top",
+          description: data.message[0].Recheck,
+        },
+      ])
+      setrecheck(data.message[0].Recheck)
+      setallSample(data.message[0].ALLSample)
+      setcoa(data.message[0].COAExprot)
+      }
+      
+//       ALLSample: 10
+// COAExprot: 0
+// Recheck: 1
+// idRealTimeCardDS: 1
+    })
+  }, [])
 
-    if(!token || !user){
+  useEffect(() => {
+    if(!user){
       history.push('/login')
     }
+    if(user.role == "1"){
+      history.push('/Orders')
+    }
+    if(user.role == "2"){
+      history.push('/labatory')
+    }
+    // console.log(user)
     // setTimeout(() => {
     //   setSubscribemodal(true)
     // }, 2000);
-  }, [])
+  }, [user])
 
   return (
     <React.Fragment>
       <div className="page-content">
+        <ModalSelectCOA isOpenCOA={modalCoa} toggleCOA={toggleModalCOA}/>
+      <ModalDetail isOpen={modal} toggle={toggleModal} toggleCOA={toggleModalCOA}/>
         <MetaTags>
           <title>Dashboard | Run - Application</title>
         </MetaTags>
@@ -250,7 +302,7 @@ const Dashboard = props => {
                 ))}
             </Col> */}
             <Col  md="12" xs="21">
-            <LatestTranaction token={token} />
+            <LatestTranaction token={token} toggle={toggleModal} toggleCOA={toggleModalCOA}/>
             </Col>
           </Row>
 

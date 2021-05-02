@@ -84,7 +84,7 @@ const ModalTestReport = props => {
 
       const fetchTestResultlasted = (token, idOrders) => {
         readTestResultlasted(token, idOrders).then(data => {
-          console.log(' readTestResultlasted :',data)
+          // console.log(' readTestResultlasted :',data)
           if(data){
             if(data.success == 'success'){
               setValues({
@@ -147,7 +147,7 @@ const ModalTestReport = props => {
         let Histamine = 0
         let SPG = 0
         let Aw = 0
-        console.log('ch function : ' , oldValues.Tn + "---" + values.Tn)
+        // console.log('ch function : ' , oldValues.Tn + "---" + values.Tn)
 
         if(oldValues.Tn == values.Tn){
           Tn = Tn
@@ -203,10 +203,10 @@ const ModalTestReport = props => {
           Aw: Aw,
         }
 
-        console.log('index update FG : ', index)
+        // console.log('index update FG : ', index)
         updateFG(token,index).then(data => {
           if(data){
-            console.log('updateFG : ', data)
+            // console.log('updateFG : ', data)
           }
         })
       }
@@ -238,10 +238,10 @@ const ModalTestReport = props => {
           TempSPG: values.TempSPG 
         }
         
-        console.log('value test :',index )
+        // console.log('value test :',index )
         Addtestreport(token, index).then(data => {
           if(data){
-            console.log('test data : ', data)
+            // console.log('test data : ', data)
             fetchTestResultlasted(token , values.idOrders)
             countDailyFinishgood()
           }
@@ -306,7 +306,7 @@ const ModalTestReport = props => {
         // console.log('formatted_date_now : ' , formatted_date_now)
         readFG(token).then(data => {
           if(data){
-            console.log('readFG : ', data)
+            // console.log('readFG : ', data)
             if(data.success == 'success' && data.message.length > 0){
               // setOldValues({
               //   Tn            :data.message[0].TN,

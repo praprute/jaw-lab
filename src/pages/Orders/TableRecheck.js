@@ -132,12 +132,12 @@ const [columnTable, setColumnTable] = useState([
   const ModalDe = <ModalDetail />
 
   const handleReSent = (token, idOrders) => {
-    console.log('idOrders : ' ,idOrders)
+    // console.log('idOrders : ' ,idOrders)
     var id = {
       idOrders : idOrders
     }
     reSend(token, id).then(data => {
-      console.log('resend : ',data)
+      // console.log('resend : ',data)
       if(data){
         if(data.success == 'success'){
           setsuccess_dlg(true)

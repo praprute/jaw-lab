@@ -125,7 +125,7 @@ const ModalEdit = props => {
           idOrders : values.idOrders
         }
         deleteOrder(token, id).then(response => {
-          console.log(response)
+          // console.log(response)
         })
       }      
       
@@ -137,7 +137,7 @@ const ModalEdit = props => {
       }, [orders,bio,tr])
 
       useEffect(() => {
-        console.log(orders)
+        // console.log(orders)
         setSelectChem(orders.idScfChem)
         switch (orders.Priority){
           case "0":

@@ -105,7 +105,7 @@ export const reSend = (token,idOrders) => {
 }
 
 export const deleteOrder = (token, idOrders) => {
-    console.log('deleteOrder id : ' , idOrders)
+    // console.log('deleteOrder id : ' , idOrders)
     return fetch(`${API}/deleteOrder`, {
         method: "POST",
         headers: {
@@ -252,7 +252,7 @@ export const Addtestreport = (token, index) => {
 
 //Recheck
 export const Recheck = (token, index) => {
-    console.log('index recheck : ', index)
+    // console.log('index recheck : ', index)
     return fetch(`${API}/Recheck`, {
         method: "POST",
         headers: {
@@ -270,7 +270,7 @@ export const Recheck = (token, index) => {
 
 //WaitMicro
 export const WaitMicro = (token, index) => {
-    console.log('index recheck : ', index)
+    // console.log('index recheck : ', index)
     return fetch(`${API}/WaitMicro`, {
         method: "POST",
         headers: {
@@ -322,6 +322,71 @@ export const updateFG = (token, index) => {
         .catch(err => console.log(err));
 }
 
+export const addRealtimeOrder = (token, index) => {
+    return fetch(`${API}/addRealTimeOrder`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+// exportCOA
+export const exportCOA = (token) => {
+    return fetch(`${API}/exportCOA`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+        //   body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+export const UpdatexportCOA = (token,index) => {
+    return fetch(`${API}/UpdatexportCOA`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
+export const UpdatexportPASS = (token,index) => {
+    return fetch(`${API}/UpdatexportPASS`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            "Content-type": "application/json",
+            Authorization:`Bearer ${token}`
+          },
+          body : JSON.stringify(index)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}
+
 // const fetchDetail = (token, idOrders) => {
   //   readTestResultlasted(token, idOrders).then(data => {
   //     console.log(' readTestResultlasted :',data)
@@ -338,4 +403,4 @@ export const updateFG = (token, index) => {
   //       return null
   //     }
   //   })
-  // }
+  // }UpdatexportCOA

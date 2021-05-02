@@ -93,10 +93,10 @@ const Login = props => {
     // history.push("/")
     // return (<Redirect to="/Orders" /> )
     signInUser(values).then(response => {
-      console.log(response)
+      // console.log(response)
       if(response){
         if(response.success == "success"){
-        console.log(response)
+        // console.log(response)
         setregisSuc(true)
         settextResponse(response.message_th)
         setValues({ ...values, username:"" , password:""})
@@ -114,7 +114,7 @@ const Login = props => {
       } )
         // 
       }else{
-        console.log(response)
+        // console.log(response)
         setregisFail(true)
         settextResponse(response.message_th)
       }

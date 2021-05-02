@@ -16,8 +16,8 @@ import "../Tables/datatables.scss"
 
 //get api
 import { isAuthenticated } from './../Authentication/api'
-import {readIdMicroCheckbox,readIdChemCheckbox,addOrder} from './api'
-
+import {readIdMicroCheckbox,readIdChemCheckbox,addOrder,addRealtimeOrder} from './api'
+import {updateCardDS} from './../Dashboard/api' 
 //SweetAlert
 import SweetAlert from "react-bootstrap-sweetalert"
 //store
@@ -83,8 +83,8 @@ const ModalAddOrder = props => {
 
       const handleSubmit = event => {
         event.preventDefault()
-        console.log('bbe : ',values.pord )
-        console.log('pord : ',values.bbe )
+        // console.log('bbe : ',values.pord )
+        // console.log('pord : ',values.bbe )
         // var pord = Moment(values.pord).format('DD/MM/YYYY')
         // var bbe = Moment(values.bbe).format('DD/MM/YYYY')
         var pord = values.pord
@@ -117,11 +117,26 @@ const ModalAddOrder = props => {
         }
 
         addOrder(token, index).then(data => {
-            console.log('response add order : ', data)
+            // console.log('response add order : ', data)
             if(data){
+              // idAddOrder
                 if(data.success == 'success'){
+                  var index ={
+                    idOrders : data.idAddOrder
+                  }
                     // console.log('response add order SUCCCESS: ', data)
-                setsuccess_msg(true)  
+                    addRealtimeOrder(token, index).then(data => {
+                      if(data){
+                        // console.log('addRealtimeOrder : ', data)
+                        updateCardDS(token).then(data => {
+                          if(data){
+                            setsuccess_msg(true)
+                          }
+                        })
+                        
+                      }
+                    })
+                  
                 }else{
                     // console.log('response add order ERROR : ')
                     setsuccess_error(true)

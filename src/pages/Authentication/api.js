@@ -1,5 +1,5 @@
-// import { API } from './../../configAPI'
-const API = "http://localhost:3031/api"
+import { API } from './../../configAPI'
+// const API = "http://localhost:3031/api"
 
 export const Signup = (index) => {
     
@@ -7,7 +7,7 @@ export const Signup = (index) => {
         username:index.username,
         password:index.password
     })
-    console.log('index:',data)
+    // console.log('index:',data)
     return fetch(`${API}/signup`, {
         method: "POST",
         headers: {
@@ -65,3 +65,24 @@ export const isAuthenticated = () => {
     return false
   }
 };
+
+export const signout = () => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("JAWAuth");
+    return fetch(`${API}/signout`, {
+      method: "GET",
+      headers: {
+        Accept: 'application/json',
+        "Content-type": "application/json",
+      },
+      // body: JSON.stringify(index)
+    })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+};  //function logout และ Clear localStorage ของ Browser
+ 

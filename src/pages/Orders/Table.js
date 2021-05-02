@@ -39,6 +39,7 @@ import { AddProductDetail, AddSpecificDetail, AddTestResultlasted, AddSpecificBi
 
 //SweetAlert
 import SweetAlert from "react-bootstrap-sweetalert"
+// import ModalDetail from './../Orders/ModalDetail'
 
 const OrderTable = props => {
 
@@ -155,7 +156,7 @@ const OrderTable = props => {
   }
 
   useEffect(() => {
-    console.log('props.toggleTR : ', props)
+    // console.log('props.toggleTR : ', props)
     if(props.page == "lab"){
       setColumnTable([
         {
@@ -196,7 +197,7 @@ const OrderTable = props => {
         {
             label: "Timestamp",
             field: "timeStamp",
-            sort: "asc",
+            sort: "desc",
           },
         {
           label: "Detail",
@@ -275,21 +276,26 @@ const OrderTable = props => {
               }
               if(props.tricker == "allOrder"){
                 if(data.message[i].Status == 0 || data.message[i].Status == 3){
+                  // console.log('rd : ', rd)
                   index.push(rd)
                 }
-              }else if(props.tricker == "urgent"){
+              }
+              if(props.tricker == "urgent"){
                 if(data.message[i].Priority == 2 && data.message[i].Status != 1 &&  data.message[i].Status != 2){
                   index.push(rd)
                 }
-              }else if(props.tricker == "micro"){
+              }
+              if(props.tricker == "micro"){
                 if(data.message[i].Status == 3){
                   index.push(rd)
                 }
-              }else if(props.tricker == "recheck"){
+              }
+              if(props.tricker == "recheck"){
                 if(data.message[i].Status == 2){
                   index.push(rd)
                 }
-              }else if(props.tricker == "pass"){
+              }
+              if(props.tricker == "pass"){
                 if(data.message[i].Status == 1){
                   index.push(rd)
                 }
@@ -311,7 +317,7 @@ const OrderTable = props => {
                 1: <span className="badge bg-warning font-size-10">rush</span>,
                 2: <span className="badge bg-danger font-size-10">urgent</span>,
                 }
-            
+            // console.log('index ', index)
         setDataMerch({
             columns: columnTable,
             rows:map(index, order=>({...order, priority:statePriority[order.priority] ,status:status[order.status]})) 
@@ -429,7 +435,7 @@ const OrderTable = props => {
     })
   }
   }, [dataMerch])
-
+  // 
       
   return (
     <React.Fragment>

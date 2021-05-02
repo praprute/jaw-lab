@@ -83,6 +83,7 @@ const LatestTranaction = props => {
 
   useEffect(() => {
     getRealTimeOrder(props.token).then(response => {
+      // console.log('real time order : ', response)
       if(response){
         if(response.success == 'success'){
                 var index = []
@@ -95,7 +96,11 @@ const LatestTranaction = props => {
                     Status:       response.message[i].Status,
                     Priority:     response.message[i].Priority,
                     name:         response.message[i].name,
-                    detail: <span>
+                    detail: <span
+                    onClick={
+                      props.toggle
+                 }
+                    >
                             <i
                             className={
                               "bx bx-cog font-size-24"
@@ -106,19 +111,33 @@ const LatestTranaction = props => {
                   }
                   index.push(rd)
                 }
-                const setStatus = {
-                  completed: (
-                    <span className="badge bg-success font-size-10">Completed</span>
-                  ),
-                  Waitingtocheck: <span className="badge bg-warning font-size-10">Waiting to check</span>,
-                  Rechecking: <span className="badge bg-danger font-size-10">Rechecking</span>,
-                }
+              //   const setStatus = {
+              //     completed: (
+              //       <span className="badge bg-success font-size-10">Completed</span>
+              //     ),
+              //     Waitingtocheck: <span className="badge bg-warning font-size-10">Waiting to check</span>,
+              //     Rechecking: <span className="badge bg-danger font-size-10">Rechecking</span>,
+              //   }
               
-              const statePriority = {
-                  normal: <span className="badge bg-success font-size-10">normal</span>,
-                  fast: <span className="badge bg-warning font-size-10">fast</span>,
-                  very: <span className="badge bg-danger font-size-10">very</span>,
+              // const statePriority = {
+              //     normal: <span className="badge bg-success font-size-10">normal</span>,
+              //     fast: <span className="badge bg-warning font-size-10">fast</span>,
+              //     very: <span className="badge bg-danger font-size-10">very</span>,
+              //     }
+                  const setStatus = {
+                    1: (
+                      <span className="badge bg-success font-size-10">Completed</span>
+                    ),
+                    0: <span className="badge bg-warning font-size-10">Waiting to check</span>,
+                    3: <span className="badge bg-warning font-size-10">Waiting to Micro</span>,
+                    2: <span className="badge bg-danger font-size-10">Rechecking</span>,
                   }
+                
+                const statePriority = {
+                    0: <span className="badge bg-success font-size-10">normal</span>,
+                    1: <span className="badge bg-warning font-size-10">rush</span>,
+                    2: <span className="badge bg-danger font-size-10">urgent</span>,
+                    }
                 settransactions(map(index, order=>({...order, Status:setStatus[order.Status], Priority:statePriority[order.Priority]})))
               
               }else{

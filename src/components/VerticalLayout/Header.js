@@ -30,7 +30,8 @@ import slack from "../../assets/images/brands/slack.png"
 
 //i18n
 import { withTranslation } from "react-i18next"
-
+import {signout} from "./../../pages/Authentication/api"
+import { useHistory } from 'react-router-dom'
 // Redux Store
 import {
   showRightSidebarAction,
@@ -39,6 +40,7 @@ import {
 } from "../../store/actions"
 
 const Header = props => {
+  const history = useHistory();
   const [search, setsearch] = useState(false)
   const [megaMenu, setmegaMenu] = useState(false)
   const [socialDrp, setsocialDrp] = useState(false)
@@ -88,20 +90,23 @@ const Header = props => {
             <div className="navbar-brand-box">
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={logo} alt="" height="22" />
+                  {/* <img src={logo} alt="" height="22" /> */}
+                  <img src="https://jaw.sgp1.digitaloceanspaces.com/Logo-RFS.png" alt="" height="22" />
                 </span>
                 <span className="logo-lg">
-                  <img src={logoDark} alt="" height="17" />
+                  {/* <img src={logoDark} alt="" height="17" /> */}
+                  <img src="https://jaw.sgp1.digitaloceanspaces.com/Logo-RFS.png" alt="" height="17" />
                 </span>
               </Link>
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logoLightSvg} alt="" height="22" />
+                  {/* <img src={logoLightSvg} alt="" height="22" /> */}
+                  <img src="https://jaw.sgp1.digitaloceanspaces.com/Logo-RFS.png" alt="" height="22" />
                      {/* <span>JAW APPLICATION</span> */}
                 </span>
                 <span className="logo-lg">
-                  <img src={logoLightPng} alt="" height="19" />
+                  <img src="https://jaw.sgp1.digitaloceanspaces.com/Logo-RFS.png" alt="" height="19" />
                   {/* <span>JAW APPLICATION</span> */}
                 </span>
               </Link>
@@ -396,7 +401,29 @@ const Header = props => {
               </button>
             </div>
 
-            <NotificationDropdown />
+            <div className="dropdown d-none d-lg-inline-block ms-1">
+              <button
+                type="button"
+                onClick={() => {
+                  signout().then(data => {
+                    console.log(data)
+                    if(data){
+                      if(data.success == "success"){
+                        history.push('login')
+                      }
+                    }
+                  })
+                }}
+                className="btn header-item waves-effect waves-light "
+                // data-toggle="fullscreen"
+              >
+                {/* <i className="bx bx-fullscreen"/> */}
+                SIGN OUT
+              </button>
+            </div>
+
+            {/* <NotificationDropdown /> */}
+
             {/* <ProfileMenu /> */}
 
             {/* <div

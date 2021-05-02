@@ -47,6 +47,8 @@ import { withTranslation } from "react-i18next"
 import { isAuthenticated } from './../Authentication/api'
 import { useHistory } from 'react-router-dom'
 
+import ModalSelectCOA from './../Orders/ModalSelectCOA'
+
 const Labatorypage = props => {
     const history = useHistory();
     
@@ -57,8 +59,13 @@ const Labatorypage = props => {
     const [modalTR, setModalTR] = useState(false)
     const [modalEdit, setModalEdit] = useState(false)
     const [modalAddorder, setModalAddorder] = useState(false)
+    const [modalCoa, setModalCOA] = useState(false)
 
     const toggleModal = () => {
+      setModal(!modal)
+    }
+    const toggleModalCOA = () => {
+      setModalCOA(!modalCoa)
       setModal(!modal)
     }
 
@@ -82,11 +89,23 @@ const Labatorypage = props => {
     }
   }
   useEffect(() => {
-}, [])
+    if(!user){
+      history.push('/login')
+    }
+    if(user.role == "1"){
+      history.push('/Orders')
+    }
+    // console.log(user)
+    // setTimeout(() => {
+    //   setSubscribemodal(true)
+    // }, 2000);
+  }, [user])
     return (
         <React.Fragment>
           <div className="page-content">
-            <ModalDetail isOpen={modal} toggle={toggleModal}/>
+
+            <ModalSelectCOA isOpenCOA={modalCoa} toggleCOA={toggleModalCOA}/>
+            <ModalDetail isOpen={modal} toggle={toggleModal} toggleCOA={toggleModalCOA}/>
             <ModalAddOrder  isOpenAddorder={modalAddorder} toggleAddorder={toggleModalAddOrder}/>
             <ModalTestReport isOpenTR={modalTR} toggleTR={toggleModalTestReport}/>
             {/* <TestReport isOpenTR={modalTR} toggleTR={toggleModalTestReport}/> */}
@@ -179,31 +198,31 @@ const Labatorypage = props => {
                   <TabContent activeTab={activeTab} className="p-3">
                     <TabPane tabId="1" id="all-order">
                     <div>
-                    <OrderTable page={"lab"} tricker={"allOrder"} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
+                    <OrderTable page={"lab"} tricker={"allOrder"} toggleCOA={toggleModalCOA} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
                     </div>
                     </TabPane>
                     
                     <TabPane tabId="2" id="urgent">
                       <div>
-                      <OrderTable page={"lab"} tricker={"urgent"} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
+                      <OrderTable page={"lab"} tricker={"urgent"} toggleCOA={toggleModalCOA} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
 
                     <TabPane tabId="3" id="wait">
                       <div>
-                      <OrderTable page={"lab"} tricker={"micro"} toggle={toggleModal} toggleEdit={toggleModalEdit}  toggleTR={toggleModalTestReport}/>
+                      <OrderTable page={"lab"} tricker={"micro"} toggleCOA={toggleModalCOA} toggle={toggleModal} toggleEdit={toggleModalEdit}  toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
 
                     <TabPane tabId="4" id="processing">
                       <div>
-                      <OrderTable page={"lab"} tricker={"recheck"} toggle={toggleModal} toggleEdit={toggleModalEdit}  toggleTR={toggleModalTestReport}/>
+                      <OrderTable page={"lab"} tricker={"recheck"} toggleCOA={toggleModalCOA} toggle={toggleModal} toggleEdit={toggleModalEdit}  toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
 
                     <TabPane tabId="5" id="pass">
                       <div>
-                      <OrderTable page={"lab"} tricker={"pass"} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
+                      <OrderTable page={"lab"} tricker={"pass"} toggleCOA={toggleModalCOA} toggle={toggleModal} toggleEdit={toggleModalEdit} toggleTR={toggleModalTestReport}/>
                       </div>
                     </TabPane>
                   </TabContent>

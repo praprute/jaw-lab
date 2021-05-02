@@ -45,14 +45,14 @@ const Register = props => {
   const handleValidSubmit = event => {
     event.preventDefault();
     Signup(values).then(response => {
-      console.log(response)
+      // console.log(response)
       if(response.success == "success"){
-        console.log(response)
+        // console.log(response)
         setregisSuc(true)
         settextResponse(response.message_th)
         setValues({ ...values, username:"" , password:""})
       }else{
-        console.log(response)
+        // console.log(response)
         setregisFail(true)
         settextResponse(response.message_th)
       }

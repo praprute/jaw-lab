@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 // //Import Scrollbar
 import SimpleBar from "simplebar-react"
@@ -8,12 +8,13 @@ import SimpleBar from "simplebar-react"
 import MetisMenu from "metismenujs"
 import { withRouter } from "react-router-dom"
 import { Link } from "react-router-dom"
-
+import {signout,isAuthenticated} from "./../../pages/Authentication/api"
 //i18n
 import { withTranslation } from "react-i18next"
 
 const SidebarContent = props => {
   const ref = useRef()
+  const {user, token} = isAuthenticated()
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
     const pathName = props.location.pathname
@@ -39,6 +40,28 @@ const SidebarContent = props => {
   useEffect(() => {
     ref.current.recalculate()
   })
+
+  const [order, setOrder] = useState(false) 
+  const [lab, setlab] = useState(false) 
+  const [ds, setDs] = useState(false)
+  useEffect(() => {
+    // console.log(user)
+    if(user.role == "1"){
+      setOrder(true)
+      setlab(false)
+      setDs(false)
+    }
+    if(user.role == "2"){
+      setOrder(false)
+      setlab(true)
+      setDs(false)
+    }
+    if(user.role == "0"){
+      setOrder(true)
+      setlab(true)
+      setDs(true)
+    }
+  }, [])
 
   function scrollElement(item) {
       if (item) {
@@ -117,27 +140,40 @@ const SidebarContent = props => {
                 </li>
               </ul>
             </li> */}
+            {ds ? (
             <li>
               <Link to="/dashboard" className=" waves-effect">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Dashboards")}</span>
               </Link>
             </li>
-
+            ) : (
+            null
+            )}
             <li className="menu-title">{props.t("Apps")}</li>
-            <li>
+              {order ? (
+                <li>
               <Link to="/Orders" className=" waves-effect">
                 <i className="bx bx-folder-open"></i>
                 <span>{props.t("Order")}</span>
               </Link>
             </li>
-            <li>
+              ) : (
+                null
+              )}
+            
+            {lab ? (
+               <li>
               <Link to="/Labatory" className=" waves-effect">
                 <i className="bx bx-task"></i>
                 <span>{props.t("Labatory")}</span>
               </Link>
             </li>
-            <li>
+            ) : (
+              null
+            )}
+           
+            {/* <li>
               <Link to="/calendar" className=" waves-effect">
                 <i className="bx bx-calendar"></i>
                 <span>{props.t("Calendar")}</span>
@@ -688,7 +724,7 @@ const SidebarContent = props => {
                   <Link to="/maps-leaflet">{props.t("Leaflet Maps")}</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
 
             {/* <li>
               <Link to="/#" className="has-arrow waves-effect">

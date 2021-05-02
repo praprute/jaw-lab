@@ -121,7 +121,7 @@ const Chat = props => {
     setcurMessage("")
     onAddMessage(message)
   }
-  console.log(curMessage)
+  // console.log(curMessage)
 
   const scrollToBottom = () => {
     if (messageBox) {

@@ -10,7 +10,7 @@ const INIT_STATE = {
    const DFGST = (state = INIT_STATE, action) => {
         switch (action.type){
             case ADD_FG:
-                console.log('DFG: action.payload : ', action.payload)
+                // console.log('DFG: action.payload : ', action.payload)
                         return {
                             ...state,
                             DFG: action.payload,

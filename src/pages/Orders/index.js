@@ -27,6 +27,7 @@ import OrderTableRecheck from './TableRecheck'
 import ModalDetail from './ModalDetail'
 import ModalAddOrder from './ModalAddOrder'
 import ModalEdit from './ModalEdit'
+import ModalSelectCOA from './ModalSelectCOA'
 // import { MDBDataTable } from "mdbreact"
 
 //Import Breadcrumb
@@ -54,11 +55,16 @@ const Orderpage = props => {
     const [modal, setModal] = useState(false)
     const [modalEdit, setModalEdit] = useState(false)
     const [modalAddorder, setModalAddorder] = useState(false)
+    const [modalCoa, setModalCOA] = useState(false)
 
     const toggleModal = () => {
       setModal(!modal)
     }
 
+    const toggleModalCOA = () => {
+      setModalCOA(!modalCoa)
+      setModal(!modal)
+    }
     const toggleModalEdit = () =>{
       setModalEdit(!modalEdit)
     }
@@ -75,11 +81,22 @@ const Orderpage = props => {
     }
   }
   useEffect(() => {
-}, [])
+    if(!user){
+      history.push('/login')
+    }
+    if(user.role == "2"){
+      history.push('/labatory')
+    }
+    // console.log(user)
+    // setTimeout(() => {
+    //   setSubscribemodal(true)
+    // }, 2000);
+  }, [user])
     return (
         <React.Fragment>
           <div className="page-content">
-            <ModalDetail isOpen={modal} toggle={toggleModal}/>
+            <ModalSelectCOA isOpenCOA={modalCoa} toggleCOA={toggleModalCOA}/>
+            <ModalDetail isOpen={modal} toggle={toggleModal} toggleCOA={toggleModalCOA}/>
             <ModalAddOrder  isOpenAddorder={modalAddorder} toggleAddorder={toggleModalAddOrder}/>
             <ModalEdit isOpenEdit={modalEdit} toggleEdit={toggleModalEdit} />
             <MetaTags>
@@ -156,12 +173,12 @@ const Orderpage = props => {
                           </div>
                       </ul>
                     </div>
-                    <OrderTable toggle={toggleModal} toggleEdit={toggleModalEdit}/>
+                    <OrderTable toggleCOA={toggleModalCOA} toggle={toggleModal} toggleEdit={toggleModalEdit}/>
                     </TabPane>
                     
                     <TabPane tabId="2" id="processing">
                       <div>
-                      <OrderTableRecheck toggle={toggleModal} />
+                      <OrderTableRecheck toggleCOA={toggleModalCOA} toggle={toggleModal} />
                       </div>
                     </TabPane>
                   </TabContent>
