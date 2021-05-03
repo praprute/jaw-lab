@@ -33,44 +33,10 @@ import { useHistory } from 'react-router-dom'
 import {signInUser, authenticate, isAuthenticated} from './api'
 
 const Login = props => {
-  let history = useHistory();
-  // const handleValidSubmit = (event, values) => {
-  //   props.loginUser(values, props.history)
-  // }
-  const signIn = (res, type) => {
-    const { socialLogin } = props
-    if (type === "google" && res) {
-      const postData = {
-        name: res.profileObj.name,
-        email: res.profileObj.email,
-        token: res.tokenObj.access_token,
-        idToken: res.tokenId,
-      }
-      socialLogin(postData, props.history, type)
-    } else if (type === "facebook" && res) {
-      const postData = {
-        name: res.name,
-        email: res.email,
-        token: res.accessToken,
-        idToken: res.tokenId,
-      }
-      socialLogin(postData, props.history, type)
-    }
+  const history = useHistory();
+  const handleValidSubmit = (event, values) => {
+    props.loginUser(values, props.history)
   }
-
-  //handleGoogleLoginResponse
-  const googleResponse = response => {
-    signIn(response, "google")
-  }
-
-  //handleTwitterLoginResponse
-  // const twitterResponse = e => {}
-
-  //handleFacebookLoginResponse
-  const facebookResponse = response => {
-    signIn(response, "facebook")
-  }
-
 
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value })
@@ -87,11 +53,9 @@ const Login = props => {
   const [redireact , setRedirect] = useState(false) 
   const [textResponse, settextResponse] = useState("")
 
-  const handleSubmit = event => {
+  const  handleSubmit = event => {
     event.preventDefault();
-    // console.log('check submit : ',)
-    // history.push("/")
-    // return (<Redirect to="/Orders" /> )
+   
     signInUser(values).then(response => {
       // console.log(response)
       if(response){
@@ -100,11 +64,6 @@ const Login = props => {
         setregisSuc(true)
         settextResponse(response.message_th)
         setValues({ ...values, username:"" , password:""})
-        const authIdex = {
-          user:response.user,
-          token:response.token
-        }
-        // authenticate(authIdex)
         
         authenticate({
           user:response.user,
@@ -127,12 +86,23 @@ const Login = props => {
   }
 
   const {user, token} = isAuthenticated()
-
   useEffect(() => {
+    console.log(props.history)
+  }, [])
+  useEffect(() => {
+    if(!user){
+      history.push('/login')
+    }
+    if(user.role == "1"){
+      history.push('/Orders')
+    }
+    if(user.role == "2"){
+      history.push('/labatory')
+    }
     // if(user || token){
     //   history.push("/")
     // }
-  }, [])
+  }, [user])
 
   return (
     <React.Fragment>
@@ -273,13 +243,18 @@ const Login = props => {
   )
 }
 
-export default withRouter(Login)
-  // connect(mapStateToProps, { loginUser, apiError, socialLogin })(Login)
-// )
+const mapStateToProps = state => {
+  const { error } = state.Login
+  return { error }
+}
 
-// Login.propTypes = {
-//   error: PropTypes.any,
-//   history: PropTypes.object,
-//   loginUser: PropTypes.func,
-//   socialLogin: PropTypes.func
-// }
+export default withRouter(Login)
+  connect(mapStateToProps, { loginUser, apiError, socialLogin })(Login)
+
+
+Login.propTypes = {
+  error: PropTypes.any,
+  history: PropTypes.object,
+  loginUser: PropTypes.func,
+  socialLogin: PropTypes.func
+}
