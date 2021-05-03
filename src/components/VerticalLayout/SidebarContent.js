@@ -46,7 +46,8 @@ const SidebarContent = props => {
   const [ds, setDs] = useState(false)
   useEffect(() => {
     // console.log(user)
-    if(user.role == "1"){
+    if(user){
+      if(user.role == "1"){
       setOrder(true)
       setlab(false)
       setDs(false)
@@ -61,6 +62,8 @@ const SidebarContent = props => {
       setlab(true)
       setDs(true)
     }
+    }
+    
   }, [])
 
   function scrollElement(item) {

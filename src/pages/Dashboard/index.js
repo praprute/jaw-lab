@@ -159,20 +159,24 @@ updateCardDS(token)
   }, [])
 
   useEffect(() => {
-    if(!user){
-      history.push('/login')
-    }
-    if(user.role == "1"){
+    if(user){
+      if(user.role == "1"){
       history.push('/Orders')
     }
     if(user.role == "2"){
       history.push('/labatory')
     }
+    if(user.role == "0"){
+      history.push('/dashboard')
+    }
+    }else{
+      history.push('/login')
+    }
     // console.log(user)
     // setTimeout(() => {
     //   setSubscribemodal(true)
     // }, 2000);
-  }, [user])
+  }, [])
 
   return (
     <React.Fragment>
