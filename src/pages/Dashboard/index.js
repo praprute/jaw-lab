@@ -166,9 +166,7 @@ updateCardDS(token)
     if(user.role == "2"){
       history.push('/labatory')
     }
-    if(user.role == "0"){
-      history.push('/dashboard')
-    }
+    
     }else{
       history.push('/login')
     }
