@@ -41,29 +41,28 @@ const SidebarContent = props => {
     ref.current.recalculate()
   })
 
-  const [order, setOrder] = useState(false) 
-  const [lab, setlab] = useState(false) 
-  const [ds, setDs] = useState(false)
+  const [order, setOrder] = useState(true) 
+  const [lab, setlab] = useState(true) 
+  const [ds, setDs] = useState(true)
   useEffect(() => {
     // console.log(user)
-    if(user){
-      if(user.role == "1"){
-      setOrder(true)
-      setlab(false)
-      setDs(false)
-    }
-    if(user.role == "2"){
-      setOrder(false)
-      setlab(true)
-      setDs(false)
-    }
-    if(user.role == "0"){
-      setOrder(true)
-      setlab(true)
-      setDs(true)
-    }
-    }
-    
+    // if(user){
+    //   if(user.role == "1"){
+    //   setOrder(true)
+    //   setlab(false)
+    //   setDs(false)
+    // }
+    // if(user.role == "2"){
+    //   setOrder(false)
+    //   setlab(true)
+    //   setDs(false)
+    // }
+    // if(user.role == "0"){
+    //   setOrder(true)
+    //   setlab(true)
+    //   setDs(true)
+    // }
+    // }
   }, [])
 
   function scrollElement(item) {

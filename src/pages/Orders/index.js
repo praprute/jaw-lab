@@ -81,21 +81,18 @@ const Orderpage = props => {
     }
   }
   useEffect(() => {
-    if(user){
-      if(user.role == "1"){
-      history.push('/Orders')
-    }
-    if(user.role == "2"){
-      history.push('/labatory')
-    }
+    // if(user){
+    //   if(user.role == "1"){
+    //   history.push('/Orders')
+    // }
+    // if(user.role == "2"){
+    //   history.push('/labatory')
+    // }
     
-    }else{
-      history.push('/login')
-    }
-    // console.log(user)
-    // setTimeout(() => {
-    //   setSubscribemodal(true)
-    // }, 2000);
+    // }else{
+    //   history.push('/login')
+    // }
+  
   }, [])
     return (
         <React.Fragment>

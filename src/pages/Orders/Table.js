@@ -434,7 +434,7 @@ const OrderTable = props => {
         
     })
   }
-  }, [dataMerch])
+  }, [])
   // 
       
   return (
